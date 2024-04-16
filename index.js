@@ -4,6 +4,8 @@ const morgan=require('morgan')
 const mongoose= require('mongoose')
 const bodyParser = require('body-parser')
 const path= require('path')
+const { v4: uuidv4 } = require('uuid')
+
 // const axios=require('axios')
 const dotenv=require('dotenv').config()
 const jsonwebtoken=require('jsonwebtoken')
@@ -50,12 +52,13 @@ app.get('/', async (req, res) => {
 
 app.post('/user',async(req,res)=>{
     try{
-        const{user_name,email,password,u_id}=req.body
+        const{user_name,email,password}=req.body
         const new_user=await UserController.adduser(
             user_name,
             email,
             password, 
-            u_id     
+           
+              
     )
         res.status(200).json({message:'new commer',data:new_user})
     }catch(error){
@@ -104,12 +107,12 @@ app.post('/user/logout',async(req,res)=>{
 
 app.post('/user/post',authorization,async(req,res)=>{
     try{
-        const post=await register.findOneAndUpdate({_id:req.body._id},
-            {$push:{'upload.0.post':{
-                p_id:req.body.p_id,
-                title:req.body.title,
-                desc:req.body.desc
-            }}})
+        const{title,desc}=req.body
+        const post=await UserController.Post(
+            req.u_id,
+            title,
+            desc
+        )
             res.status(200).json({message:'post uploaded',data:post})
     }catch(error){
         res.status(500).json({message:'failed'})
