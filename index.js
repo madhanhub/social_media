@@ -82,6 +82,7 @@ app.post('/user/login',async(req,res)=>{
                   res.setHeader('user_name',Login.user_name)
                   res.setHeader('email', Login.email)
                   res.setHeader('u_id',Login.u_id)
+                 
                   
                   res.status(200).json({message:"login successfully",data:token})
                 }
@@ -120,23 +121,23 @@ app.post('/user/post',authorization,async(req,res)=>{
 })
 app.post('/post/command',authorization,async(req,res)=>{
     try{
-        const comman=await register.findOneAndUpdate({_id:req.body._id},
-            {$push:{command:{message:req.body.message,p_id:req.body.p_id}}})
+        const { _id,message,p_id}=req.body
+        const comman=await UserController.Command(
+            _id,
+            message,
+            p_id
+        )
             res.status(200).json({message:'command placed',data:comman})
     }catch(error){
         res.status(500).json({message:'failed'})
     }
 })
-app.post('/user/bio',async(req,res)=>{
+app.post('/user/bio',authorization,async(req,res)=>{
     try{
-        const bio=await register.findOneAndUpdate({_id:req.body._id},
-            {$push:{Bio:{
-                school:req.body.school,
-                college:req.body.college,
-                location:req.body.location,
-                native:req.body.native,
-                working:req.body.working,
-            }}})
+        const{ _id,school,college,working,location,native}=req.body
+        const bio=await UserController.Bio(
+            _id,school,college,working,location,native
+        )
             res.status(200).json({message:'bio updated',data:bio})
     }catch(error){
         res.status(500).json({message:'failed'})

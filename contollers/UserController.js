@@ -42,5 +42,20 @@ class UserController{
             }}})
             return post
     }
+    static async Command(
+        _id,message,p_id
+    ){
+        const comd=await register.findOneAndUpdate({_id},
+            {$push:{command:{message,p_id}}})
+            return comd
+    }
+
+    static async Bio(
+        _id,school,college,working,location,native
+    ){
+        const bio=await register.findOneAndUpdate({_id},
+            {$push:{Bio:{school,college,working,location,native}}})
+            return bio
+    }
 }
 module.exports=UserController
