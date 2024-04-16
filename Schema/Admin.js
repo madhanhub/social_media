@@ -1,10 +1,5 @@
 const mongoose=require('mongoose')
-
-const user_schema=new mongoose.Schema({
-
-    u_id:{
-        type:String,
-    },
+const admin=new mongoose.Schema({
     user_name:{
         type:String
     },
@@ -43,5 +38,6 @@ const user_schema=new mongoose.Schema({
         native:{type:String},
         working:{type:String},
     }]
+
 })
-module.exports=mongoose.model('Register',user_schema)
+modeule.exports=mongoose.model('Admin',admin)

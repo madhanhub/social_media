@@ -12,6 +12,7 @@ const authorization = require('./functions/auth')
 const cors= require('./functions/cors')
 
 const register=require('./Schema/Register')
+// const admin=require('./Schema/Admin')
 // const { register } = require('module')
 
 const UserController=require('./contollers/UserController')
@@ -49,11 +50,12 @@ app.get('/', async (req, res) => {
 
 app.post('/user',async(req,res)=>{
     try{
-        const{user_name,email,password}=req.body
+        const{user_name,email,password,u_id}=req.body
         const new_user=await UserController.adduser(
             user_name,
             email,
-            password,      
+            password, 
+            u_id     
     )
         res.status(200).json({message:'new commer',data:new_user})
     }catch(error){
@@ -71,11 +73,12 @@ app.post('/user/login',async(req,res)=>{
 
             if(Login){
                 {
-                  let token= await jsonwebtoken.sign({id:Login.id,user_name:Login.user_name,email:Login.email},process.env.SECRET)
+                  let token= await jsonwebtoken.sign({id:Login.id,user_name:Login.user_name,email:Login.email,u_id:Login.u_id},process.env.SECRET)
                   res.setHeader('token',token)
                   res.setHeader('id',Login.id)
                   res.setHeader('user_name',Login.user_name)
                   res.setHeader('email', Login.email)
+                  res.setHeader('u_id',Login.u_id)
                   
                   res.status(200).json({message:"login successfully",data:token})
                 }
@@ -136,3 +139,4 @@ app.post('/user/bio',async(req,res)=>{
         res.status(500).json({message:'failed'})
     }
 })
+

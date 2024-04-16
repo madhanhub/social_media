@@ -1,13 +1,14 @@
 const register=require('../Schema/Register')
 class UserController{
     static async adduser(
-        user_name,email,password
+        user_name,email,password,u_id
     ){
         
         const new_register=await new register({
             user_name,
             email,
-            password
+            password,
+            u_id
         }).save()
         return new_register
     }
