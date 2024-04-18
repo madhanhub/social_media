@@ -6,6 +6,19 @@ const bodyParser = require('body-parser')
 const path= require('path')
 const { v4: uuidv4 } = require('uuid')
 
+const upload= require('./functions/upload_images')
+const multer=require('multer')
+const storage=multer.diskStorage({
+  destination:(req,file,cb)=>{
+    cb(null,'photo')
+  },
+  filename:(req,file,cb)=>{
+  cb(null,file.originalname)
+    }
+})
+const photo=multer({storage})
+app.set('viewengine','ejs')
+
 // const axios=require('axios')
 const dotenv=require('dotenv').config()
 const jsonwebtoken=require('jsonwebtoken')
@@ -15,7 +28,7 @@ const cors= require('./functions/cors')
 
 const register=require('./Schema/Register')
 //const admin=require('./Schema/Admin')
-// const { register } = require('module')
+
 
 const UserController=require('./contollers/UserController')
 
@@ -167,3 +180,7 @@ app.post('/user/list',authorization,async(req,res)=>{
         res.status(500).json({message:'failed'})
     }
 })
+app.post('/upload',photo.single('file'), (req, res) => {
+    res.json({ message: 'File uploaded successfully', fileInfo: req.file })
+    res.json(req.file)
+  })
