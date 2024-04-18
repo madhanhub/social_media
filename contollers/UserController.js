@@ -59,5 +59,20 @@ class UserController{
             {$push:{Bio:{school,college,working,location,native}}})
             return bio
     }
+    static async Delete(
+        u_id
+    )
+    {
+        const del=await register.findOneAndDelete({u_id})
+        return del
+    }
+    static async List(
+        u_id
+    )
+    {
+        const list=await register.findOne({u_id})
+        return list
+    }
+    
 }
 module.exports=UserController

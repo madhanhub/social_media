@@ -14,7 +14,7 @@ const authorization = require('./functions/auth')
 const cors= require('./functions/cors')
 
 const register=require('./Schema/Register')
-// const admin=require('./Schema/Admin')
+//const admin=require('./Schema/Admin')
 // const { register } = require('module')
 
 const UserController=require('./contollers/UserController')
@@ -146,3 +146,24 @@ app.post('/user/bio',authorization,async(req,res)=>{
     }
 })
 
+app.post('/user/delete',authorization,async(req,res)=>
+{
+    try{
+        const u_id=req.u_id
+        const dele=await UserController.Delete(u_id)
+            res.status(200).json({message:'deleted successfully',data:dele})
+    }catch(error){
+        res.status(500).json({message:'failed'})
+    }
+})
+app.post('/user/list',authorization,async(req,res)=>{
+    try{
+        const u_id=req.u_id
+        const list=await UserController.List(
+            u_id
+        )
+        res.status(200).json({message:'listed successfully',data:list})
+    }catch(error){
+        res.status(500).json({message:'failed'})
+    }
+})
