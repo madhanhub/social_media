@@ -53,7 +53,7 @@ class UserController{
     }
 
     static async Bio(
-        uuid_id,school,college,working,location,native
+        u_id,school,college,working,location,native
     ){
         const bio=await register.findOneAndUpdate({u_id},
             {$push:{Bio:{school,college,working,location,native}}})
