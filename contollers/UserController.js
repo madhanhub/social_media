@@ -5,11 +5,13 @@ class UserController{
         user_name,email,password
     ){  
         const u_id = uuidv4()
+        
         const new_register=await new register({
             user_name,
             email,
             password,
-            u_id
+            u_id,
+            
         }).save()
         return new_register
    
@@ -35,7 +37,7 @@ class UserController{
     ){
         const p_id = uuidv4()
         const post=await register.findOneAndUpdate({u_id},
-            {$push:{'upload.0.post':{
+            {$push:{post:{
                 p_id,
                 title,
                 desc
@@ -43,17 +45,17 @@ class UserController{
             return post
     }
     static async Command(
-        _id,message,p_id
+        u_id,message,p_id
     ){
-        const comd=await register.findOneAndUpdate({_id},
-            {$push:{command:{message,p_id}}})
+        const comd=await register.findOneAndUpdate({u_id,'post.p_id':p_id},
+            {$push:{'post.$.command':{message}}})
             return comd
     }
 
     static async Bio(
-        _id,school,college,working,location,native
+        uuid_id,school,college,working,location,native
     ){
-        const bio=await register.findOneAndUpdate({_id},
+        const bio=await register.findOneAndUpdate({u_id},
             {$push:{Bio:{school,college,working,location,native}}})
             return bio
     }

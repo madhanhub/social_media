@@ -57,6 +57,8 @@ app.post('/user',async(req,res)=>{
             user_name,
             email,
             password, 
+            
+            
            
               
     )
@@ -82,7 +84,7 @@ app.post('/user/login',async(req,res)=>{
                   res.setHeader('user_name',Login.user_name)
                   res.setHeader('email', Login.email)
                   res.setHeader('u_id',Login.u_id)
-                 
+                  //res.setHeader('post',Login.post)
                   
                   res.status(200).json({message:"login successfully",data:token})
                 }
@@ -121,9 +123,9 @@ app.post('/user/post',authorization,async(req,res)=>{
 })
 app.post('/post/command',authorization,async(req,res)=>{
     try{
-        const { _id,message,p_id}=req.body
+        const {message,p_id}=req.body
         const comman=await UserController.Command(
-            _id,
+            req.u_id,
             message,
             p_id
         )
@@ -134,9 +136,9 @@ app.post('/post/command',authorization,async(req,res)=>{
 })
 app.post('/user/bio',authorization,async(req,res)=>{
     try{
-        const{ _id,school,college,working,location,native}=req.body
+        const{ school,college,working,location,native}=req.body
         const bio=await UserController.Bio(
-            _id,school,college,working,location,native
+           req.u_id,school,college,working,location,native
         )
             res.status(200).json({message:'bio updated',data:bio})
     }catch(error){

@@ -16,10 +16,7 @@ const authorization = function (req,res,next){
            req.user_name=tokengen.user_name
            req.email=tokengen.email
            req.u_id=tokengen.u_id
-          
-           
-
-           
+           //req.post=tokengen.post
            next()  
        } else {
            res.status(500).json({

@@ -22,19 +22,23 @@ const user_schema=new mongoose.Schema({
         default:'inactive'
     },
  
-    upload:[{
-
-        post:{
+  
+        post:[{
         p_id:{type:String},
         title:{type:String},
         desc:{type:String},
-        }
-}],
+
+        command:[{
+            p_id:{type:String},
+            message:{type:String}
+        }],
+        }],
     
-    command:[{
-        p_id:{type:String},
-        message:{type:String}
-    }],
+    
+    // command:[{
+    //     p_id:{type:String},
+    //     message:{type:String}
+    // }],
 
     Bio:[{
         school:{type:String},
