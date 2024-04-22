@@ -73,6 +73,6 @@ class UserController{
         const list=await register.findOne({u_id})
         return list
     }
-    
+   
 }
 module.exports=UserController

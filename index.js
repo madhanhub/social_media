@@ -4,7 +4,7 @@ const morgan=require('morgan')
 const mongoose= require('mongoose')
 const bodyParser = require('body-parser')
 const path= require('path')
-const { v4: uuidv4 } = require('uuid')
+
 
 const upload= require('./functions/upload_images')
 const multer=require('multer')
@@ -69,11 +69,7 @@ app.post('/user',async(req,res)=>{
         const new_user=await UserController.adduser(
             user_name,
             email,
-            password, 
-            
-            
-           
-              
+            password,  
     )
         res.status(200).json({message:'new commer',data:new_user})
     }catch(error){
@@ -97,7 +93,7 @@ app.post('/user/login',async(req,res)=>{
                   res.setHeader('user_name',Login.user_name)
                   res.setHeader('email', Login.email)
                   res.setHeader('u_id',Login.u_id)
-                  //res.setHeader('post',Login.post)
+                  
                   
                   res.status(200).json({message:"login successfully",data:token})
                 }
@@ -183,4 +179,32 @@ app.post('/user/list',authorization,async(req,res)=>{
 app.post('/upload',photo.single('file'), (req, res) => {
     res.json({ message: 'File uploaded successfully', fileInfo: req.file })
     res.json(req.file)
+  })
+  app.post('/admin/view',async(req,res)=>{
+    try{
+        const view=await register.findOne({_id:req.body._id})
+        res.status(200).json({message:'success',data:view})
+    }catch(error){
+        res.status(500).json({message:'failed'})
+    }
+  })
+  
+  app.post('/user/fans',async(req,res)=>{
+    try{
+        const fol=await register.findOneAndUpdate({_id:req.body._id},
+            {$push:{followers:{user_name:req.body.user_name}}})
+            res.status(200).json({message:'success',data:fol})
+    }catch(error){
+        res.status(500).json({message:'failed'})
+    }
+  })
+
+  app.post('/user/unfollowers',async(req,res)=>{
+    try{
+        const unfol=await register.findOneAndUpdate({_id:req.body._id},
+            {$pull:{followers:{user_name:req.body.user_name}}} )
+            res.status(200).json({message:'success',data:unfol})
+    }catch(error){
+        res.status(500).json({message:'failed'})
+    }
   })

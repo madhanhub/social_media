@@ -46,6 +46,9 @@ const user_schema=new mongoose.Schema({
         location:{type:String},
         native:{type:String},
         working:{type:String},
-    }]
+    }],
+    followers:[{
+       user_name: {type:String},
+    }],
 })
 module.exports=mongoose.model('Register',user_schema)
