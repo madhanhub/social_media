@@ -2,7 +2,7 @@ const register=require('../Schema/Register')
 const { v4: uuidv4 } = require('uuid')
 class UserController{
     static async adduser(
-        user_name,email,password
+        user_name,email,password,likes
     ){  
         const u_id = uuidv4()
         
@@ -11,6 +11,7 @@ class UserController{
             email,
             password,
             u_id,
+            
             
         }).save()
         return new_register
@@ -33,14 +34,15 @@ class UserController{
             return logout
     }
     static async Post(
-        u_id,title,desc
+        u_id,title,desc,likes
     ){
         const p_id = uuidv4()
         const post=await register.findOneAndUpdate({u_id},
             {$push:{post:{
                 p_id,
                 title,
-                desc
+                desc,
+                likes
             }}})
             return post
     }
@@ -74,18 +76,53 @@ class UserController{
         return list
     }
    static async Follow(
-    _id,user_name
+    u_id,user_name
    ){
-    const follo=await register.findOneAndUpdate({_id},
+    const follo=await register.findOneAndUpdate({u_id},
         {$push:{followers:{user_name}}})
         return follo
    }
    static async UnFollow(
-    _id,user_name
+    u_id,user_name
    ){
-    const unfollo=await register.findOneAndUpdate({_id},
+    const unfollo=await register.findOneAndUpdate({u_id},
         {$pull:{followers:{user_name}}})
         return unfollo
+   }
+   static async Following(
+    u_id,user_name
+   ){
+    const following=await register.findOneAndUpdate({u_id},
+        {$push:{following:{user_name}}})
+        return following
+   }
+   static async Deleted(
+    u_id,user_name
+   ){
+    const del=await register.findOneAndUpdate({u_id},
+        {$pull:{following:{user_name}}})
+        return del
+   }
+   static async Likes(
+    u_id,p_id
+   ){
+    const likees=await register.findOneAndUpdate({u_id,'post.p_id':p_id},
+        {$inc:{'post.$.likes':1}})
+        return likees
+   }
+   static async UnLikes(
+    u_id,p_id
+   ){
+    const likee=await register.findOneAndUpdate({u_id,'post.p_id':p_id},
+        {$inc:{'post.$.likes':-1}})
+        return likee
+   }
+   static async Request(
+    u_id,list
+   ){
+    const reqe=await register.findOneAndUpdate({u_id},
+        {$push:{'request.list':list}})
+        return reqe
    }
 }
 module.exports=UserController

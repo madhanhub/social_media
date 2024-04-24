@@ -70,6 +70,8 @@ app.post('/user',async(req,res)=>{
             user_name,
             email,
             password,  
+            
+            
     )
         res.status(200).json({message:'new commer',data:new_user})
     }catch(error){
@@ -119,11 +121,12 @@ app.post('/user/logout',async(req,res)=>{
 
 app.post('/user/post',authorization,async(req,res)=>{
     try{
-        const{title,desc}=req.body
+        const{title,desc,likes}=req.body
         const post=await UserController.Post(
             req.u_id,
             title,
-            desc
+            desc,
+            likes
         )
             res.status(200).json({message:'post uploaded',data:post})
     }catch(error){
@@ -189,11 +192,11 @@ app.post('/upload',photo.single('file'), (req, res) => {
     }
   })
   
-  app.post('/user/fans',async(req,res)=>{
+  app.post('/user/fans',authorization,async(req,res)=>{
     try{
-        const{_id,user_name}=req.body
+        const{user_name}=req.body
         const fol=await UserController.Follow(
-            _id,
+            req.u_id,
             user_name
             )
             res.status(200).json({message:'success',data:fol})
@@ -202,11 +205,11 @@ app.post('/upload',photo.single('file'), (req, res) => {
     }
   })
 
-  app.post('/user/unfollowers',async(req,res)=>{
+  app.post('/user/unfollowers',authorization,async(req,res)=>{
     try{
-        const{_id,user_name}=req.body
+        const{user_name}=req.body
         const unfol=await UserController.UnFollow(
-            _id,
+            req.u_id,
             user_name
             )
             res.status(200).json({message:'success',data:unfol})
@@ -218,11 +221,75 @@ app.post('/upload',photo.single('file'), (req, res) => {
   app.post('/share',async(req,res)=>{
     try{
         const share=await register.findOne({_id:req.body._id},{post:1})
-        var pos=share.post
+        var pos=share
         await register.findOneAndUpdate({u_id:req.body.u_id},
             {$push:{post:{title:req.body.title,desc:req.body.desc}}},
             {new:true})
         res.status(200).json({message:'success',data:pos})
+    }catch(error){
+        res.status(500).json({message:'failed'})
+    }
+  })
+  
+  app.post('/user/following',authorization,async(req,res)=>{
+    try{
+        const {user_name}=req.body
+        const foll=await UserController.Following(
+            req.u_id,
+            user_name
+        )
+        res.status(200).json({message:'succes',data:foll})
+    }catch(error){
+        res.status(500).json({message:'failed'})
+    }
+  }) 
+
+  app.post('/user/delete/request',authorization,async(req,res)=>{
+    try{
+        const{user_name}=req.body
+        const del=await UserController.Deleted(
+            req.u_id,
+            user_name
+        )
+        res.status(200).json({message:'success',data:del})
+    }catch(error){
+        res.status(500).json({message:'failed'})
+    }
+  })
+  app.post('/post/likes',authorization,async(req,res)=>{
+    try{
+        const{p_id}=req.body
+        const likee=await UserController.Likes(
+            req.u_id,
+            p_id
+        )
+            res.status(200).json({message:'success',data:likee})
+    }catch(error){
+        res.status(500).json({message:'failed'})
+    }
+  })
+
+  app.post('/post/unlikes',authorization,async(req,res)=>{
+    try{
+        const{p_id}=req.body
+        const likees=await UserController.UnLikes(
+            req.u_id,
+            p_id
+        )
+            res.status(200).json({message:'success',data:likees})
+    }catch(error){
+        res.status(500).json({message:'failed'})
+    }
+  })
+
+  app.post('/user/request',authorization,async(req,res)=>{
+    try{
+        const{list}=req.body
+        const reqe=await UserController.Request(
+            req.u_id,
+            list
+        )
+            res.status(200).json({message:'success',data:reqe})
     }catch(error){
         res.status(500).json({message:'failed'})
     }

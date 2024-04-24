@@ -27,11 +27,12 @@ const user_schema=new mongoose.Schema({
         p_id:{type:String},
         title:{type:String},
         desc:{type:String},
-
+        likes:{type:Number,},
         command:[{
             p_id:{type:String},
             message:{type:String}
         }],
+        
         }],
     
     
@@ -50,5 +51,13 @@ const user_schema=new mongoose.Schema({
     followers:[{
        user_name: {type:String},
     }],
+    following:[{
+        user_name: {type:String},
+    }],
+    request:{
+       list:[{
+        type:String}],
+    },
+   
 })
 module.exports=mongoose.model('Register',user_schema)
