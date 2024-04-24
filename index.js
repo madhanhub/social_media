@@ -294,3 +294,14 @@ app.post('/upload',photo.single('file'), (req, res) => {
         res.status(500).json({message:'failed'})
     }
   })
+  app.post('/request/accept',async(req,res)=>{
+    try{
+        const accept=await register.findOne({'request.list':req.body.list})
+        var user_name=accept.list
+        await register.findOneAndUpdate({_id:req.body._id},
+            {$push:{following:{user_name:req.body.user_name}}})
+        res.status(200).json({message:'success',data:accept})
+    }catch(error){
+        res.status(500).json({message:'failed'})
+    }
+  })
