@@ -191,8 +191,11 @@ app.post('/upload',photo.single('file'), (req, res) => {
   
   app.post('/user/fans',async(req,res)=>{
     try{
-        const fol=await register.findOneAndUpdate({_id:req.body._id},
-            {$push:{followers:{user_name:req.body.user_name}}})
+        const{_id,user_name}=req.body
+        const fol=await UserController.Follow(
+            _id,
+            user_name
+            )
             res.status(200).json({message:'success',data:fol})
     }catch(error){
         res.status(500).json({message:'failed'})
@@ -201,9 +204,25 @@ app.post('/upload',photo.single('file'), (req, res) => {
 
   app.post('/user/unfollowers',async(req,res)=>{
     try{
-        const unfol=await register.findOneAndUpdate({_id:req.body._id},
-            {$pull:{followers:{user_name:req.body.user_name}}} )
+        const{_id,user_name}=req.body
+        const unfol=await UserController.UnFollow(
+            _id,
+            user_name
+            )
             res.status(200).json({message:'success',data:unfol})
+    }catch(error){
+        res.status(500).json({message:'failed'})
+    }
+  })
+
+  app.post('/share',async(req,res)=>{
+    try{
+        const share=await register.findOne({_id:req.body._id},{post:1})
+        var pos=share.post
+        await register.findOneAndUpdate({u_id:req.body.u_id},
+            {$push:{post:{title:req.body.title,desc:req.body.desc}}},
+            {new:true})
+        res.status(200).json({message:'success',data:pos})
     }catch(error){
         res.status(500).json({message:'failed'})
     }

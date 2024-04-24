@@ -73,6 +73,19 @@ class UserController{
         const list=await register.findOne({u_id})
         return list
     }
-   
+   static async Follow(
+    _id,user_name
+   ){
+    const follo=await register.findOneAndUpdate({_id},
+        {$push:{followers:{user_name}}})
+        return follo
+   }
+   static async UnFollow(
+    _id,user_name
+   ){
+    const unfollo=await register.findOneAndUpdate({_id},
+        {$pull:{followers:{user_name}}})
+        return unfollo
+   }
 }
 module.exports=UserController
