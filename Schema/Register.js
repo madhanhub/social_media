@@ -45,7 +45,7 @@ const user_schema=new mongoose.Schema({
         user_name: {type:String},
     }],
     request:{
-       user_name:[{
+       user_list:[{
         type:String}],
     },
    

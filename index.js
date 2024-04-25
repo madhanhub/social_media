@@ -300,23 +300,24 @@ app.post('/upload',photo.single('file'), (req, res) => {
 
   app.post('/user/request',authorization,async(req,res)=>{
     try{
-        const{user_name}=req.body
+        const{user_list}=req.body
         const reqe=await UserController.Request(
             req.u_id,
-            user_name
+            user_list
         )
             res.status(200).json({message:'success',data:reqe})
     }catch(error){
         res.status(500).json({message:'failed'})
     }
   })
+  
   app.post('/request/accept',async(req,res)=>{
     try{
-        const accept=await register.findOne({'request.user_name':req.body.user_name},{request:1})
-        var user_name=accept.user_name
-        await register.findOneAndUpdate({user_name:user_name},
-            {$push:{following:{user_name:req.body.user_name}}})
-        res.status(200).json({message:'success',data:accept})
+       const{u_id,user_list}=req.body
+       const userTo=await register.findOne({'request.user_list':user_list})
+       const update=await register.findOneAndUpdate({u_id:u_id},
+        {$push:{following:{user_name:userTo.user_name}}})
+        res.status(200).json({message:'success',data:update})
     }catch(error){
         res.status(500).json({message:'failed'})
     }

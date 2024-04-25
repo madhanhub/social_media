@@ -130,10 +130,10 @@ class UserController{
         return likee
    }
    static async Request(
-    u_id,user_name
+    u_id,user_list
    ){
     const reqe=await register.findOneAndUpdate({u_id},
-        {$push:{'request.user_name':user_name}})
+        {$push:{'request.user_list':user_list}})
         return reqe
    }
 }
