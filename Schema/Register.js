@@ -23,17 +23,7 @@ const user_schema=new mongoose.Schema({
     },
  
   
-        post:[{
-        p_id:{type:String},
-        title:{type:String},
-        desc:{type:String},
-        likes:{type:Number,},
-        command:[{
-            p_id:{type:String},
-            message:{type:String}
-        }],
-        
-        }],
+       
     
     
     // command:[{
@@ -55,7 +45,7 @@ const user_schema=new mongoose.Schema({
         user_name: {type:String},
     }],
     request:{
-       list:[{
+       user_name:[{
         type:String}],
     },
    

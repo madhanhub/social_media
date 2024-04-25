@@ -25,7 +25,7 @@ const jsonwebtoken=require('jsonwebtoken')
 
 const authorization = require('./functions/auth')
 const cors= require('./functions/cors')
-
+const post=require('./Schema/Post')
 const register=require('./Schema/Register')
 //const admin=require('./Schema/Admin')
 
@@ -119,11 +119,24 @@ app.post('/user/logout',async(req,res)=>{
     }
 })
 
-app.post('/user/post',authorization,async(req,res)=>{
+app.post('/post',async(req,res)=>{
     try{
         const{title,desc,likes}=req.body
+        const newPost=new post({
+            title,
+            desc,
+            likes
+        }).save()
+        res.status(200).json({message:'success',data:newPost})
+    }catch(error){
+        res.status(500).json({message:'failed'})
+    }
+})
+app.post('/user/post',async(req,res)=>{
+    try{
+        const{_id,title,desc,likes}=req.body
         const post=await UserController.Post(
-            req.u_id,
+            _id,
             title,
             desc,
             likes
@@ -284,10 +297,10 @@ app.post('/upload',photo.single('file'), (req, res) => {
 
   app.post('/user/request',authorization,async(req,res)=>{
     try{
-        const{list}=req.body
+        const{user_name}=req.body
         const reqe=await UserController.Request(
             req.u_id,
-            list
+            user_name
         )
             res.status(200).json({message:'success',data:reqe})
     }catch(error){
@@ -296,9 +309,9 @@ app.post('/upload',photo.single('file'), (req, res) => {
   })
   app.post('/request/accept',async(req,res)=>{
     try{
-        const accept=await register.findOne({'request.list':req.body.list})
-        var user_name=accept.list
-        await register.findOneAndUpdate({_id:req.body._id},
+        const accept=await register.findOne({'request.user_name':req.body.user_name},{request:1})
+        var user_name=accept.user_name
+        await register.findOneAndUpdate({user_name:user_name},
             {$push:{following:{user_name:req.body.user_name}}})
         res.status(200).json({message:'success',data:accept})
     }catch(error){

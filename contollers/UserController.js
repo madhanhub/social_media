@@ -1,4 +1,5 @@
 const register=require('../Schema/Register')
+const post=require('../Schema/Post')
 const { v4: uuidv4 } = require('uuid')
 class UserController{
     static async adduser(
@@ -34,17 +35,18 @@ class UserController{
             return logout
     }
     static async Post(
-        u_id,title,desc,likes
+        _id,title,desc,likes
     ){
         const p_id = uuidv4()
-        const post=await register.findOneAndUpdate({u_id},
+        const Post=await post.findOneAndUpdate({_id},
             {$push:{post:{
+               
                 p_id,
                 title,
                 desc,
                 likes
             }}})
-            return post
+            return Post
     }
     static async Command(
         u_id,message,p_id
@@ -118,10 +120,10 @@ class UserController{
         return likee
    }
    static async Request(
-    u_id,list
+    u_id,user_name
    ){
     const reqe=await register.findOneAndUpdate({u_id},
-        {$push:{'request.list':list}})
+        {$push:{'request.user_name':user_name}})
         return reqe
    }
 }
