@@ -121,22 +121,25 @@ app.post('/user/logout',async(req,res)=>{
 
 app.post('/post',async(req,res)=>{
     try{
-        const{title,desc,likes}=req.body
-        const newPost=new post({
+        const {title,desc,likes,u_id}=req.body
+        const newPost= await UserController.New_Post(
             title,
             desc,
-            likes
-        }).save()
+            likes,
+            u_id
+            
+        )
         res.status(200).json({message:'success',data:newPost})
     }catch(error){
         res.status(500).json({message:'failed'})
     }
 })
-app.post('/user/post',async(req,res)=>{
+app.post('/user/post',authorization,async(req,res)=>{
     try{
-        const{_id,title,desc,likes}=req.body
+        const{title,desc,likes}=req.body
         const post=await UserController.Post(
-            _id,
+            
+            req.u_id,
             title,
             desc,
             likes

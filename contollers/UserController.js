@@ -34,13 +34,23 @@ class UserController{
             {$set:{status:'inactive'}})
             return logout
     }
+
+    static async New_Post(
+       title,desc,likes,u_id
+    )
+    {
+        const newPost=await new post({
+            title,desc,likes, u_id
+        }).save()
+        return newPost
+    }
     static async Post(
-        _id,title,desc,likes
+        u_id,title,desc,likes
     ){
         const p_id = uuidv4()
-        const Post=await post.findOneAndUpdate({_id},
+        const Post=await post.findOneAndUpdate({u_id},
             {$push:{post:{
-               
+                
                 p_id,
                 title,
                 desc,
@@ -51,7 +61,7 @@ class UserController{
     static async Command(
         u_id,message,p_id
     ){
-        const comd=await register.findOneAndUpdate({u_id,'post.p_id':p_id},
+        const comd=await post.findOneAndUpdate({u_id,'post.p_id':p_id},
             {$push:{'post.$.command':{message}}})
             return comd
     }
@@ -108,14 +118,14 @@ class UserController{
    static async Likes(
     u_id,p_id
    ){
-    const likees=await register.findOneAndUpdate({u_id,'post.p_id':p_id},
+    const likees=await post.findOneAndUpdate({u_id,'post.p_id':p_id},
         {$inc:{'post.$.likes':1}})
         return likees
    }
    static async UnLikes(
     u_id,p_id
    ){
-    const likee=await register.findOneAndUpdate({u_id,'post.p_id':p_id},
+    const likee=await post.findOneAndUpdate({u_id,'post.p_id':p_id},
         {$inc:{'post.$.likes':-1}})
         return likee
    }
