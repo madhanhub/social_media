@@ -44,16 +44,21 @@ class UserController{
         }).save()
         return newPost
     }
-    static async Post({
-        _id,title,desc,id
-    }){
-        const Post=await post.findOneAndUpdate({_id},
-            {$push:{post:{
-                p_id:id,
-                title,
-                desc,    
-            }}},{new:true})
-            return Post
+    static async Post({ pid, title, desc, _id }) {
+        try {
+            // Assuming 'post' is a Mongoose model
+            // This updates the document by pushing to an array field named 'posts' (not 'post')
+            const updatedPost = await post.findOneAndUpdate(
+                { _id: pid }, // Assuming you want to find by 'pid' which should actually be '_id' in most schema designs
+                { $push: { posts: { p_id: _id, title, desc } } }, // Changed 'post' to 'posts'
+                { new: true } // Return the updated document
+            );
+            console.log(updatedPost);
+            return updatedPost;
+        } catch (error) {
+            console.error('Error in UserController.Post:', error);
+            throw error; // Rethrow the error to be handled in the route
+        }
     }
     static async Command(
         _id,message,

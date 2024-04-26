@@ -5,7 +5,8 @@ const authorization = function (req,res,next){
     const authHeader = req.headers['authorization']
     const token  = authHeader && authHeader.split(' ')[1]
    //const token = req.params.token
-   console.log(authHeader)
+//    console.log(authHeader)
+//    console.log("********")
    if(token==null) return res.sendStatus(401)
    try {
        let tokengen =  jsonwebtoken.verify(token,process.env.SECRET);

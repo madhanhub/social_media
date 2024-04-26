@@ -136,19 +136,20 @@ app.post('/post',async(req,res)=>{
         res.status(500).json({message:'failed'})
     }
 })
-app.post('/user/post',authorization,async(req,res)=>{
-    try{
-        const{_id,title,desc}=req.body
-        const post=await UserController.Post({_id: req.id,
-            title,
-            desc,_id}
-          
-        )
-            res.status(200).json({message:'post uploaded',data:post})
-    }catch(error){
-        res.status(500).json({message:'failed'})
+app.post('/user/post', authorization, async (req, res) => {
+    try {
+       const Post=await post.findOneAndUpdate({_id:req.body._id},
+        {$push:{post:{
+            title:req.body.title,
+            desc:req.body.desc,
+            p_id:req.id,
+        }}})
+        res.status(200).json({ message: 'Post uploaded', data: Post });
+    } catch (error) {
+        console.error('Failed to post:', error);
+        res.status(500).json({ message: 'Failed to upload post' });
     }
-})
+});
 app.post('/post/command',authorization,async(req,res)=>{
     try{
         const {message,_id}=req.body
