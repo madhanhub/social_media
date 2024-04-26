@@ -155,15 +155,15 @@ app.post('/user/post', authorization, async (req, res) => {
 app.post('/post/command',authorization,async(req,res)=>{
     try{
 
-        const com=await post.findOneAndUpdate({_id:req.body._id,u_id:req.body.u_id},
-            {$push:{'post.$.command':{message:req.body.message}}})
-        // const {_id,message}=req.body
-        // const u_id=req.id
-        // const com=await UserController.Command(
-        //     _id,
-        //     u_id,
-        //     message
-        // )
+        // const com=await post.findOneAndUpdate({_id:req.body._id,'post.u_id':req.id},
+        //     {$push:{'post.$.command':{message:req.body.message}}})
+        const {_id,message}=req.body
+        const u_id=req.id
+        const com=await UserController.Command({
+            _id,
+            u_id,
+            message
+    })
             res.status(200).json({message:'command placed',data:com})
     }catch(error){
         res.status(500).json({message:'failed'})

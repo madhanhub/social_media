@@ -58,8 +58,8 @@ class UserController{
     static async Command(
        _id,message,u_id
     ){
-        const comm=await post.findOneAndUpdate({_id,u_id},
-            {$push:{'post.command':{message}}})
+        const comm=await post.findOneAndUpdate({_id,'post.u_id':u_id},
+            {$push:{'post.$.command':{message}}})
             return comm
             }
 
