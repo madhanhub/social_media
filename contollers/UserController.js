@@ -45,23 +45,23 @@ class UserController{
         return newPost
     }
     static async Post(
-        _id,title,desc,p_id
+        _id,title,desc,u_id
     ){
         const Post=await post.findOneAndUpdate({_id},
             {$push:{post:{
                 title,
                 desc,
-                p_id
+                u_id
             }}})
             return Post
     }
     static async Command(
-        _id,message,
+       _id,message,u_id
     ){
-        const comd=await post.findOneAndUpdate({_id,'post._id':_id},
-            {$push:{'post.$.command':{message}}})
-            return comd
-    }
+        const comm=await post.findOneAndUpdate({_id,u_id},
+            {$push:{'post.command':{message}}})
+            return comm
+            }
 
     static async Bio(
         u_id,school,college,working,location,native
@@ -127,9 +127,9 @@ class UserController{
         return likee
    }
    static async Request(
-    u_id,user_list
+    _id,user_list
    ){
-    const reqe=await register.findOneAndUpdate({u_id},
+    const reqe=await register.findOneAndUpdate({_id},
         {$push:{'request.user_list':user_list}})
         return reqe
    }

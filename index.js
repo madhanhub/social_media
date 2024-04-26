@@ -139,28 +139,32 @@ app.post('/post',async(req,res)=>{
 app.post('/user/post', authorization, async (req, res) => {
     try {
         const {_id,title,desc}=req.body
-        const p_id=req.id
+        const u_id=req.id
        const post=await UserController.Post(
         _id,
         title,
         desc,
-        p_id
+        u_id
        )
         res.status(200).json({ message: 'Post uploaded', data: post });
     } catch (error) {
         console.error('Failed to post:', error);
         res.status(500).json({ message: 'Failed to upload post' });
     }
-});
+})
 app.post('/post/command',authorization,async(req,res)=>{
     try{
-        const {message,_id}=req.body
-        const comman=await UserController.Command(
-            req._id,
-            message,
-            _id
-        )
-            res.status(200).json({message:'command placed',data:comman})
+
+        const com=await post.findOneAndUpdate({_id:req.body._id,u_id:req.body.u_id},
+            {$push:{'post.$.command':{message:req.body.message}}})
+        // const {_id,message}=req.body
+        // const u_id=req.id
+        // const com=await UserController.Command(
+        //     _id,
+        //     u_id,
+        //     message
+        // )
+            res.status(200).json({message:'command placed',data:com})
     }catch(error){
         res.status(500).json({message:'failed'})
     }
@@ -305,7 +309,7 @@ app.post('/upload',photo.single('file'), (req, res) => {
     try{
         const{user_list}=req.body
         const reqe=await UserController.Request(
-            req.u_id,
+            req.id,
             user_list
         )
             res.status(200).json({message:'success',data:reqe})
@@ -318,7 +322,6 @@ app.post('/upload',photo.single('file'), (req, res) => {
     try{
         const { _id, user_list } = req.body
       const update=await register.findOne({_id:req.body._id,'request.user_list':req.body.user_list})
-        console.log(update)
         const Toupdate=update.request.user_list
       console.log(Toupdate)
       await register.findOneAndUpdate({_id:_id},
