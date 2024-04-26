@@ -94,12 +94,12 @@ app.post('/user/login',async(req,res)=>{
 
             if(Login){
                 {
-                  let token= await jsonwebtoken.sign({id:Login.id,user_name:Login.user_name,email:Login.email,u_id:Login.u_id},process.env.SECRET)
+                  let token= await jsonwebtoken.sign({id:Login.id,user_name:Login.user_name,email:Login.email},process.env.SECRET)
                   res.setHeader('token',token)
                   res.setHeader('id',Login.id)
                   res.setHeader('user_name',Login.user_name)
                   res.setHeader('email', Login.email)
-                  res.setHeader('u_id',Login.u_id)
+                  
                   
                   
                   res.status(200).json({message:"login successfully",data:token})
@@ -126,12 +126,9 @@ app.post('/user/logout',async(req,res)=>{
 
 app.post('/post',async(req,res)=>{
     try{
-        const {title,desc,likes,u_id}=req.body
+        const {_id}=req.body
         const newPost= await UserController.New_Post(
-            title,
-            desc,
-            likes,
-            u_id
+            _id,
             
         )
         res.status(200).json({message:'success',data:newPost})
@@ -141,13 +138,11 @@ app.post('/post',async(req,res)=>{
 })
 app.post('/user/post',authorization,async(req,res)=>{
     try{
-        const{title,desc,likes}=req.body
-        const post=await UserController.Post(
-            
-            req.u_id,
+        const{_id,title,desc}=req.body
+        const post=await UserController.Post({_id: req.id,
             title,
-            desc,
-            likes
+            desc,_id}
+          
         )
             res.status(200).json({message:'post uploaded',data:post})
     }catch(error){
@@ -156,11 +151,11 @@ app.post('/user/post',authorization,async(req,res)=>{
 })
 app.post('/post/command',authorization,async(req,res)=>{
     try{
-        const {message,p_id}=req.body
+        const {message,_id}=req.body
         const comman=await UserController.Command(
-            req.u_id,
+            req._id,
             message,
-            p_id
+            _id
         )
             res.status(200).json({message:'command placed',data:comman})
     }catch(error){

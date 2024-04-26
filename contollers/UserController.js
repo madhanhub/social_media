@@ -1,17 +1,17 @@
 const register=require('../Schema/Register')
 const post=require('../Schema/Post')
-const { v4: uuidv4 } = require('uuid')
+//const { v4: uuidv4 } = require('uuid')
 class UserController{
     static async adduser(
-        user_name,email,password,likes
+        user_name,email,password
     ){  
-        const u_id = uuidv4()
+        //const u_id = uuidv4()
         
         const new_register=await new register({
             user_name,
             email,
             password,
-            u_id,
+            //u_id,
             
             
         }).save()
@@ -36,32 +36,29 @@ class UserController{
     }
 
     static async New_Post(
-       title,desc,likes,u_id
+       _id
     )
     {
         const newPost=await new post({
-            title,desc,likes, u_id
+            _id
         }).save()
         return newPost
     }
-    static async Post(
-        u_id,title,desc,likes
-    ){
-        const p_id = uuidv4()
-        const Post=await post.findOneAndUpdate({u_id},
+    static async Post({
+        _id,title,desc,id
+    }){
+        const Post=await post.findOneAndUpdate({_id},
             {$push:{post:{
-                
-                p_id,
+                p_id:id,
                 title,
-                desc,
-                likes
-            }}})
+                desc,    
+            }}},{new:true})
             return Post
     }
     static async Command(
-        u_id,message,p_id
+        _id,message,
     ){
-        const comd=await post.findOneAndUpdate({u_id,'post.p_id':p_id},
+        const comd=await post.findOneAndUpdate({_id,'post._id':_id},
             {$push:{'post.$.command':{message}}})
             return comd
     }

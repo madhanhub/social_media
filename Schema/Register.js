@@ -2,9 +2,7 @@ const mongoose=require('mongoose')
 
 const user_schema=new mongoose.Schema({
 
-    u_id:{
-        type:String,
-    },
+   
     user_name:{
         type:String
     },
