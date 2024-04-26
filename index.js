@@ -138,13 +138,15 @@ app.post('/post',async(req,res)=>{
 })
 app.post('/user/post', authorization, async (req, res) => {
     try {
-       const Post=await post.findOneAndUpdate({_id:req.body._id},
-        {$push:{post:{
-            title:req.body.title,
-            desc:req.body.desc,
-            p_id:req.id,
-        }}})
-        res.status(200).json({ message: 'Post uploaded', data: Post });
+        const {_id,title,desc}=req.body
+        const p_id=req.id
+       const post=await UserController.Post(
+        _id,
+        title,
+        desc,
+        p_id
+       )
+        res.status(200).json({ message: 'Post uploaded', data: post });
     } catch (error) {
         console.error('Failed to post:', error);
         res.status(500).json({ message: 'Failed to upload post' });
