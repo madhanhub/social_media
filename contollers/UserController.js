@@ -141,8 +141,8 @@ class UserController{
     const accept=await register.findOne({_id,'request.user_list':user_list})
     const Raccept=accept.request.user_list
     console.log(Raccept)
-    const one=await register.findOneAndUpdate({_id:_id},
-        {push:{following:{user_name:user_list}}})
+    await register.findOneAndUpdate({_id:_id},
+        {$push:{following:{user_name:user_list}}})
     return Raccept
    }
 }
