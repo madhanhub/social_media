@@ -64,37 +64,37 @@ class UserController{
             }
 
     static async Bio(
-        u_id,school,college,working,location,native
+        _id,school,college,working,location,native
     ){
-        const bio=await register.findOneAndUpdate({u_id},
+        const bio=await register.findOneAndUpdate({_id},
             {$push:{Bio:{school,college,working,location,native}}})
             return bio
     }
     static async Delete(
-        u_id
+        _id
     )
     {
-        const del=await register.findOneAndDelete({u_id})
+        const del=await register.findOneAndDelete({_id})
         return del
     }
     static async List(
-        u_id
+        _id
     )
     {
-        const list=await register.findOne({u_id})
+        const list=await register.findOne({_id})
         return list
     }
    static async Follow(
-    u_id,user_name
+    _id,user_name
    ){
-    const follo=await register.findOneAndUpdate({u_id},
+    const follo=await register.findOneAndUpdate({_id},
         {$push:{followers:{user_name}}})
         return follo
    }
    static async UnFollow(
-    u_id,user_name
+    _id,user_name
    ){
-    const unfollo=await register.findOneAndUpdate({u_id},
+    const unfollo=await register.findOneAndUpdate({_id},
         {$pull:{followers:{user_name}}})
         return unfollo
    }
@@ -132,6 +132,18 @@ class UserController{
     const reqe=await register.findOneAndUpdate({_id},
         {$push:{'request.user_list':user_list}})
         return reqe
+   }
+   static async RAccept({
+    _id,user_list
+   })
+   {
+    
+    const accept=await register.findOne({_id,'request.user_list':user_list})
+    const Raccept=accept.request.user_list
+    console.log(Raccept)
+    const one=await register.findOneAndUpdate({_id:_id},
+        {push:{following:{user_name:user_list}}})
+    return Raccept
    }
 }
 module.exports=UserController

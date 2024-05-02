@@ -158,12 +158,12 @@ app.post('/post/command',authorization,async(req,res)=>{
         // const com=await post.findOneAndUpdate({_id:req.body._id,'post.u_id':req.id},
         //     {$push:{'post.$.command':{message:req.body.message}}})
         const {_id,message}=req.body
-        const u_id=req.id
+        
         const com=await UserController.Command({
             _id,
-            u_id,
+           
             message
-    })
+        })
             res.status(200).json({message:'command placed',data:com})
     }catch(error){
         res.status(500).json({message:'failed'})
@@ -173,7 +173,7 @@ app.post('/user/bio',authorization,async(req,res)=>{
     try{
         const{ school,college,working,location,native}=req.body
         const bio=await UserController.Bio(
-           req.u_id,school,college,working,location,native
+           req.id,school,college,working,location,native
         )
             res.status(200).json({message:'bio updated',data:bio})
     }catch(error){
@@ -184,8 +184,10 @@ app.post('/user/bio',authorization,async(req,res)=>{
 app.post('/user/delete',authorization,async(req,res)=>
 {
     try{
-        const u_id=req.u_id
-        const dele=await UserController.Delete(u_id)
+        const _id=req.id
+        const dele=await UserController.Delete({
+            _id
+        })
             res.status(200).json({message:'deleted successfully',data:dele})
     }catch(error){
         res.status(500).json({message:'failed'})
@@ -193,9 +195,9 @@ app.post('/user/delete',authorization,async(req,res)=>
 })
 app.post('/user/list',authorization,async(req,res)=>{
     try{
-        const u_id=req.u_id
+        const _id=req.id
         const list=await UserController.List(
-            u_id
+            _id
         )
         res.status(200).json({message:'listed successfully',data:list})
     }catch(error){
@@ -219,7 +221,7 @@ app.post('/upload',photo.single('file'), (req, res) => {
     try{
         const{user_name}=req.body
         const fol=await UserController.Follow(
-            req.u_id,
+            req.id,
             user_name
             )
             res.status(200).json({message:'success',data:fol})
@@ -232,7 +234,7 @@ app.post('/upload',photo.single('file'), (req, res) => {
     try{
         const{user_name}=req.body
         const unfol=await UserController.UnFollow(
-            req.u_id,
+            req.id,
             user_name
             )
             res.status(200).json({message:'success',data:unfol})
@@ -318,15 +320,30 @@ app.post('/upload',photo.single('file'), (req, res) => {
     }
   })
   
-  app.post('/request/accept',async(req,res)=>{
+//   app.post('/request/accept',authorization,async(req,res)=>{
+//     try{
+//         const {user_list} = req.body
+//         const _id=req.id
+//       const update=await register.findOne({_id,'request.user_list':req.body.user_list})
+//         const Toupdate=update.request.user_list
+//       console.log(Toupdate)
+//       await register.findOneAndUpdate({_id:_id},
+//         {$push:{following:{user_name:user_list}}})
+//         res.status(200).json({message:'success',data:Toupdate})
+//     }catch(error){
+//         res.status(500).json({message:'failed'})
+//     }
+//   })
+app.post('/request/accept',authorization,async(req,res)=>{
     try{
-        const { _id, user_list } = req.body
-      const update=await register.findOne({_id:req.body._id,'request.user_list':req.body.user_list})
-        const Toupdate=update.request.user_list
-      console.log(Toupdate)
-      await register.findOneAndUpdate({_id:_id},
-        {$push:{following:{user_name:user_list}}})
-        res.status(200).json({message:'success',data:Toupdate})
+        const{user_list}=req.body
+        const _id=req.id
+    
+        const accept=await UserController.RAccept({
+        _id,
+        user_list,
+    })
+               res.status(200).json({message:'success',data:accept})
     }catch(error){
         res.status(500).json({message:'failed'})
     }
