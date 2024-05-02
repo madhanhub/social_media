@@ -320,20 +320,6 @@ app.post('/upload',photo.single('file'), (req, res) => {
     }
   })
   
-//   app.post('/request/accept',authorization,async(req,res)=>{
-//     try{
-//         const {user_list} = req.body
-//         const _id=req.id
-//       const update=await register.findOne({_id,'request.user_list':req.body.user_list})
-//         const Toupdate=update.request.user_list
-//       console.log(Toupdate)
-//       await register.findOneAndUpdate({_id:_id},
-//         {$push:{following:{user_name:user_list}}})
-//         res.status(200).json({message:'success',data:Toupdate})
-//     }catch(error){
-//         res.status(500).json({message:'failed'})
-//     }
-//   })
 app.post('/request/accept',authorization,async(req,res)=>{
     try{
         const{user_list}=req.body
