@@ -4,9 +4,7 @@ const authorization = function (req,res,next){
     console.log(req.headers)
     const authHeader = req.headers['authorization']
     const token  = authHeader && authHeader.split(' ')[1]
-   //const token = req.params.token
-//    console.log(authHeader)
-//    console.log("********")
+   
    if(token==null) return res.sendStatus(401)
    try {
        let tokengen =  jsonwebtoken.verify(token,process.env.SECRET);
@@ -33,5 +31,5 @@ const authorization = function (req,res,next){
    
    
 };
-//https://codeforgeek.com/refresh-token-jwt-nodejs-authentication/
+
 module.exports = authorization;
