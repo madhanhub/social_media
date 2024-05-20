@@ -42,10 +42,10 @@ app.listen(3333, () => {
 	console.log('SERVER Run')
 
 	mongoose.set('strictQuery', false)
-	//connecting mongodb
+	
 	mongoose
 		.connect(`mongodb+srv://madhan91101:Mcabca%409@klncollege.ab2hmvj.mongodb.net/`
-			//process.env.MYDB_CONNECTION,
+			
 		// 	, {
 		// 	useNewUrlParser: true,
 		// 	useUnifiedTopology: true,
